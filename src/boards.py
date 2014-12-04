@@ -23,7 +23,11 @@ def mnboard():
     model['nwsData'] = json.loads(response.text)
 
     model['iemPrefix'] = 'http://www.meteor.iastate.edu/~ckarsten/bufkit/images/plotter.php?site=kmsp'
-    return render_template('hello.html', model = model)
+    return render_template('mnboard.html', model = model)
+
+@app.route('/longboard/')
+def longboard():
+    return render_template('longboard.html')
 
 if __name__ == '__main__':
     app.run(debug = True)

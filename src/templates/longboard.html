@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <style>
+            h3 {
+                margin-top: 30px;
+            }
+            #gefsLoop > img { 
+                position: absolute;
+                display: none;
+            }
+            #gefsLoop > img.show {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Long Range Forecast Tools</h2>
+        <h3>SPC Outlook</h3>
+        <div>
+            <img src="http://www.spc.noaa.gov/products/outlook/day1otlk_sm.gif" />
+            <img src="http://www.spc.noaa.gov/products/outlook/day2otlk_sm.gif" />
+            <img src="http://www.spc.noaa.gov/products/outlook/day3otlk_sm.gif" />
+            <img src="http://www.spc.noaa.gov/products/exper/day4-8/day48prob_small.gif" />
+        </div>
+        <h3>GEFS Loop</h3>
+        <div id="gefsLoop"></div>
+    </body>
+    <script>
+$(document).ready(function() {
+    // TODO accomodate for 06/12/18/00z runs - defaulting to 00z for now
+    var baseUrl = 'http://mag.ncep.noaa.gov/data/gefs-spag/00/gefs-spag_namer_{hour}_500_540_582_ht.gif';
+    var imageUrls = [];
+    var loopDelay = 500;
+    var tmpUrl, padding;
+
+    for (var i = 0; i < 31; i++) {
+        if (i < 2) {
+            padding = '00';
+        }
+        else if (i < 17) {
+            padding = '0';
+        }
+        else {
+            padding = '';
+        }
+        tmpUrl = baseUrl.replace('{hour}', padding + (i * 6));
+        imageUrls.push(tmpUrl);
+    }
+
+    for (var i = 0; i < 17; i++) {
+        tmpUrl = baseUrl.replace('{hour}', 192 + (i * 12));
+        imageUrls.push(tmpUrl);
+    }
+
+    // Load images
+    for (var i = 0; i < imageUrls.length; i++) {
+        $('#gefsLoop').append($('<img />', { src: imageUrls[i], alt: "Image not found" }));
+    }
+
+    
+    var images = $('#gefsLoop > img');
+    images.first().addClass('show');
+    setInterval(function() {
+        var index = $('#gefsLoop > img.show').index();
+        $(images[index]).removeClass('show');
+        var newIndex = (index < images.length - 1) ? index + 1 : 0;
+        $(images[newIndex]).addClass('show');
+    }, loopDelay);
+});
+    </script>
+</html>
